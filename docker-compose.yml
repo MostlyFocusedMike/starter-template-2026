@@ -1,0 +1,33 @@
+services:
+  pg_db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432" # Maps host port 5432 to container port 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Mount a named volume for data persistence
+
+volumes:
+  postgres_data:
+
+  # app:
+  #   build:
+  #     context: .
+  #   command: npm run dev
+  #   environment:
+  #     DB_USER: postgres
+  #     DB_PASSWORD: postgres
+  #     DB_HOST: pg_db
+  #     DB_NAME: dev_db
+  #     DB_SSL: false
+  #   depends_on:
+  #     - pg_db
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./src/:/usr/app/src/
+  #     - ./package.json:/usr/app/package.json

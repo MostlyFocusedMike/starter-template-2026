@@ -1,0 +1,22 @@
+# this is where docker gets the image from
+FROM node:23.6.0-alpine
+
+# code executes in the command line INSIDE the docker container
+RUN mkdir -p /usr/app/
+
+# set your working directory so that . is now /usr/src/app
+WORKDIR /usr/app
+
+COPY ./package*.json ./
+# COPY ./tsconfig.json ./
+
+RUN npm ci --omit=dev
+
+# this copies everything you need into from local into your docker container to start
+COPY ./src ./src/
+COPY ./tsconfig.json ./tsconfig.json
+# COPY ./dist ./dist/
+
+RUN npm run build
+
+CMD ["npm", "start"]
