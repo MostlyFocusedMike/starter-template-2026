@@ -8,9 +8,11 @@ const userData: Prisma.UserCreateInput[] = [
   {
     name: 'Alice',
     email: 'alice@prisma.io',
+    emailVerified: false,
     posts: {
       create: [
-        { title: 'Join the Prisma Discord',
+        {
+          title: 'Join the Prisma Discord',
           content: 'https://pris.ly/discord',
           published: true,
         },
@@ -20,6 +22,7 @@ const userData: Prisma.UserCreateInput[] = [
   {
     name: 'Nilu',
     email: 'nilu@prisma.io',
+    emailVerified: false,
     posts: {
       create: [
         {
@@ -33,6 +36,7 @@ const userData: Prisma.UserCreateInput[] = [
   {
     name: 'Mahmoud',
     email: 'mahmoud@prisma.io',
+    emailVerified: false,
     posts: {
       create: [
         {
