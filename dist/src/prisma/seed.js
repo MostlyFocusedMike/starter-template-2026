@@ -6,52 +6,29 @@ const pool = new adapter_pg_1.PrismaPg({ connectionString: process.env.DATABASE_
 const prisma = new client_1.PrismaClient({ adapter: pool });
 const userData = [
     {
-        name: 'Alice',
-        email: 'alice@prisma.io',
-        posts: {
-            create: [
-                { title: 'Join the Prisma Discord',
-                    content: 'https://pris.ly/discord',
-                    published: true,
-                },
-            ],
-        },
+        name: 'Mike Admin',
+        email: 'mostlyfocusedmike+admin@gmail.com',
+        emailVerified: false,
+        // Example relationship
+        // posts: {
+        //   create: [
+        //     {
+        //       title: 'Join the Prisma Discord',
+        //       content: 'https://pris.ly/discord',
+        //       published: true,
+        //     },
+        //   ],
+        // },
     },
     {
-        name: 'Nilu',
-        email: 'nilu@prisma.io',
-        posts: {
-            create: [
-                {
-                    title: 'Follow Prisma on Twitter',
-                    content: 'https://www.twitter.com/prisma',
-                    published: true,
-                },
-            ],
-        },
-    },
-    {
-        name: 'Mahmoud',
-        email: 'mahmoud@prisma.io',
-        posts: {
-            create: [
-                {
-                    title: 'Ask a question about Prisma on GitHub',
-                    content: 'https://www.github.com/prisma/prisma/discussions',
-                    published: true,
-                },
-                {
-                    title: 'Prisma on YouTube',
-                    content: 'https://pris.ly/youtube',
-                },
-            ],
-        },
+        name: 'Another User',
+        email: 'mostlyfocusedmike+user1@gmail.com',
+        emailVerified: false,
     },
 ];
 async function main() {
     console.log(`Start seeding ...`);
     // Clear existing data
-    await prisma.post.deleteMany();
     await prisma.user.deleteMany();
     for (const u of userData) {
         const user = await prisma.user.create({

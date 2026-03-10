@@ -39,6 +39,11 @@ npx prisma generate
 npx prisma db seed
 ```
 
+In development, you can just totally forcibly reset the db by:
+- deleting the migrations you don't want
+- then run `prisma migrate reset`
+- then migrate and generate
+
 
 ## Docker
 
