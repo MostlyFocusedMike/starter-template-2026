@@ -11,6 +11,12 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
+  // Override the default singular table names
+  user: { modelName: "users" },
+  session: { modelName: "sessions" },
+  account: { modelName: "accounts" },
+  verification: { modelName: "verifications" },
+
   emailAndPassword: {
     enabled: true,
   },

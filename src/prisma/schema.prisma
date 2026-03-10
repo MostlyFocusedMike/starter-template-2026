@@ -10,6 +10,8 @@ datasource db {
   provider = "postgresql"
 }
 
+// Better auth manages User, Session, Account, Verification
+// That's why they're singular (will change once I know it's safe)
 model User {
   id            Int       @id @default(autoincrement())
   name          String
@@ -20,7 +22,6 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-  posts         Post[]
 
   @@unique([email])
   @@map("user")
@@ -74,14 +75,15 @@ model Verification {
   @@map("verification")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
+// Example Relationship, not used
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   title     String
+//   content   String?
+//   published Boolean  @default(false)
+//   viewCount Int      @default(0)
+//   author    User?    @relation(fields: [authorId], references: [id])
+//   authorId  Int?
+// }
