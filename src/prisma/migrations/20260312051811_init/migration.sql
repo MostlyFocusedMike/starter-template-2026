@@ -13,7 +13,7 @@ CREATE TABLE "users" (
 
 -- CreateTable
 CREATE TABLE "sessions" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -27,7 +27,7 @@ CREATE TABLE "sessions" (
 
 -- CreateTable
 CREATE TABLE "accounts" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "accountId" TEXT NOT NULL,
     "providerId" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE "accounts" (
 
 -- CreateTable
 CREATE TABLE "verifications" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "identifier" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,

@@ -6,21 +6,19 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter: pool });
+console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
+const isDev = process.env.NODE_ENV === 'development'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
+  ...(isDev ? { trustedOrigins: ["http://localhost:5173"] } : null),
 
   // Authentication methods allowed
   emailAndPassword: { enabled: true },
 
   // DB Settings
-  // Override the default singular table names
-  user: { modelName: "users" },
-  session: { modelName: "sessions" },
-  account: { modelName: "accounts" },
-  verification: { modelName: "verifications" },
   // Otherwise it will use uuid for users and I don't want that
   advanced: {
-    database: { generateId: false },
+    database: { generateId: 'serial' },
   },
 });

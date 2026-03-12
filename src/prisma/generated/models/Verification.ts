@@ -20,12 +20,22 @@ export type VerificationModel = runtime.Types.Result.DefaultSelection<Prisma.$Ve
 
 export type AggregateVerification = {
   _count: VerificationCountAggregateOutputType | null
+  _avg: VerificationAvgAggregateOutputType | null
+  _sum: VerificationSumAggregateOutputType | null
   _min: VerificationMinAggregateOutputType | null
   _max: VerificationMaxAggregateOutputType | null
 }
 
+export type VerificationAvgAggregateOutputType = {
+  id: number | null
+}
+
+export type VerificationSumAggregateOutputType = {
+  id: number | null
+}
+
 export type VerificationMinAggregateOutputType = {
-  id: string | null
+  id: number | null
   identifier: string | null
   value: string | null
   expiresAt: Date | null
@@ -34,7 +44,7 @@ export type VerificationMinAggregateOutputType = {
 }
 
 export type VerificationMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
   identifier: string | null
   value: string | null
   expiresAt: Date | null
@@ -52,6 +62,14 @@ export type VerificationCountAggregateOutputType = {
   _all: number
 }
 
+
+export type VerificationAvgAggregateInputType = {
+  id?: true
+}
+
+export type VerificationSumAggregateInputType = {
+  id?: true
+}
 
 export type VerificationMinAggregateInputType = {
   id?: true
@@ -119,6 +137,18 @@ export type VerificationAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: VerificationAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: VerificationSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: VerificationMinAggregateInputType
@@ -149,18 +179,22 @@ export type VerificationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: VerificationCountAggregateInputType | true
+  _avg?: VerificationAvgAggregateInputType
+  _sum?: VerificationSumAggregateInputType
   _min?: VerificationMinAggregateInputType
   _max?: VerificationMaxAggregateInputType
 }
 
 export type VerificationGroupByOutputType = {
-  id: string
+  id: number
   identifier: string
   value: string
   expiresAt: Date
   createdAt: Date
   updatedAt: Date
   _count: VerificationCountAggregateOutputType | null
+  _avg: VerificationAvgAggregateOutputType | null
+  _sum: VerificationSumAggregateOutputType | null
   _min: VerificationMinAggregateOutputType | null
   _max: VerificationMaxAggregateOutputType | null
 }
@@ -184,7 +218,7 @@ export type VerificationWhereInput = {
   AND?: Prisma.VerificationWhereInput | Prisma.VerificationWhereInput[]
   OR?: Prisma.VerificationWhereInput[]
   NOT?: Prisma.VerificationWhereInput | Prisma.VerificationWhereInput[]
-  id?: Prisma.StringFilter<"Verification"> | string
+  id?: Prisma.IntFilter<"Verification"> | number
   identifier?: Prisma.StringFilter<"Verification"> | string
   value?: Prisma.StringFilter<"Verification"> | string
   expiresAt?: Prisma.DateTimeFilter<"Verification"> | Date | string
@@ -202,7 +236,7 @@ export type VerificationOrderByWithRelationInput = {
 }
 
 export type VerificationWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   AND?: Prisma.VerificationWhereInput | Prisma.VerificationWhereInput[]
   OR?: Prisma.VerificationWhereInput[]
   NOT?: Prisma.VerificationWhereInput | Prisma.VerificationWhereInput[]
@@ -221,15 +255,17 @@ export type VerificationOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.VerificationCountOrderByAggregateInput
+  _avg?: Prisma.VerificationAvgOrderByAggregateInput
   _max?: Prisma.VerificationMaxOrderByAggregateInput
   _min?: Prisma.VerificationMinOrderByAggregateInput
+  _sum?: Prisma.VerificationSumOrderByAggregateInput
 }
 
 export type VerificationScalarWhereWithAggregatesInput = {
   AND?: Prisma.VerificationScalarWhereWithAggregatesInput | Prisma.VerificationScalarWhereWithAggregatesInput[]
   OR?: Prisma.VerificationScalarWhereWithAggregatesInput[]
   NOT?: Prisma.VerificationScalarWhereWithAggregatesInput | Prisma.VerificationScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Verification"> | string
+  id?: Prisma.IntWithAggregatesFilter<"Verification"> | number
   identifier?: Prisma.StringWithAggregatesFilter<"Verification"> | string
   value?: Prisma.StringWithAggregatesFilter<"Verification"> | string
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"Verification"> | Date | string
@@ -238,7 +274,6 @@ export type VerificationScalarWhereWithAggregatesInput = {
 }
 
 export type VerificationCreateInput = {
-  id: string
   identifier: string
   value: string
   expiresAt: Date | string
@@ -247,7 +282,7 @@ export type VerificationCreateInput = {
 }
 
 export type VerificationUncheckedCreateInput = {
-  id: string
+  id?: number
   identifier: string
   value: string
   expiresAt: Date | string
@@ -256,7 +291,6 @@ export type VerificationUncheckedCreateInput = {
 }
 
 export type VerificationUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -265,7 +299,7 @@ export type VerificationUpdateInput = {
 }
 
 export type VerificationUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -274,7 +308,7 @@ export type VerificationUncheckedUpdateInput = {
 }
 
 export type VerificationCreateManyInput = {
-  id: string
+  id?: number
   identifier: string
   value: string
   expiresAt: Date | string
@@ -283,7 +317,6 @@ export type VerificationCreateManyInput = {
 }
 
 export type VerificationUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -292,7 +325,7 @@ export type VerificationUpdateManyMutationInput = {
 }
 
 export type VerificationUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   identifier?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -307,6 +340,10 @@ export type VerificationCountOrderByAggregateInput = {
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type VerificationAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
 }
 
 export type VerificationMaxOrderByAggregateInput = {
@@ -325,6 +362,10 @@ export type VerificationMinOrderByAggregateInput = {
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type VerificationSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
 }
 
 
@@ -371,7 +412,7 @@ export type $VerificationPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "Verification"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
     identifier: string
     value: string
     expiresAt: Date
@@ -800,7 +841,7 @@ export interface Prisma__VerificationClient<T, Null = never, ExtArgs extends run
  * Fields of the Verification model
  */
 export interface VerificationFieldRefs {
-  readonly id: Prisma.FieldRef<"Verification", 'String'>
+  readonly id: Prisma.FieldRef<"Verification", 'Int'>
   readonly identifier: Prisma.FieldRef<"Verification", 'String'>
   readonly value: Prisma.FieldRef<"Verification", 'String'>
   readonly expiresAt: Prisma.FieldRef<"Verification", 'DateTime'>

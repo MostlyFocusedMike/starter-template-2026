@@ -58,3 +58,9 @@ docker compose exec pg_db psql -U postgres
 # Packages
 - [tsx](https://npmx.dev/package/tsx)
   - The "best way to run typescript in Node"
+
+
+# Troubleshoot
+
+TSX order is watch --include blob --include blob then finally the main entrypoint
+tsx watch --include './src/**/*' src/index.ts
