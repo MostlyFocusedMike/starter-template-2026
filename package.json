@@ -7,6 +7,8 @@
     "dev": "tsx watch --include './src/**/*' src/index.ts",
     "auth:generate": "npx auth@latest generate --output ./src/prisma/schema.prisma",
     "build": "tsc",
+    "prisma:m": "prisma migrate dev --name",
+    "prisma:g": "prisma generate",
     "seed": "npx prisma db seed",
     "start": "node dist/src/index.js",
     "db": "docker compose exec pg_db psql -U postgres -d mydatabase",

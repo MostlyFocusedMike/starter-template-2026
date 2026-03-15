@@ -13,13 +13,13 @@ async function main() {
   await prisma.user.deleteMany()
 
   await auth.api
-    .signUpEmail({
+    .createUser({
       body: {
         email: process.env.ADMIN_EMAIL as string,
         password: process.env.ADMIN_PW as string,
         name: "Admin Primary",
+        role: 'admin'
       },
-      asResponse: false
     })
     .then(console.log);
 
