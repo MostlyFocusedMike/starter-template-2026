@@ -6,7 +6,6 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter: pool });
-console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
 const isDev = process.env.NODE_ENV === 'development'
 
 export const auth = betterAuth({
@@ -14,8 +13,14 @@ export const auth = betterAuth({
   ...(isDev ? { trustedOrigins: ["http://localhost:5173"] } : null),
 
   // Authentication methods allowed
-  emailAndPassword: { enabled: true },
-
+  emailAndPassword: {
+    // Use the email and password method
+    enabled: true,
+    // We don't want to bother with this for our projects,
+    // And by turning this off, our callbackUrls will fire correctly on
+    // both signup and signin
+    requireEmailVerification: false,
+  },
   // DB Settings
   // Otherwise it will use uuid for users and I don't want that
   advanced: {
