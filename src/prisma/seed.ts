@@ -1,49 +1,49 @@
+import { auth } from '../auth'
 import { PrismaClient, Prisma } from './generated/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter: pool })
 
-const userData: Prisma.UserCreateInput[] = [
-  {
-    name: 'Mike Admin',
-    email: 'mostlyfocusedmike+admin@gmail.com',
-    emailVerified: false,
-    // Example relationship
-    // posts: {
-    //   create: [
-    //     {
-    //       title: 'Join the Prisma Discord',
-    //       content: 'https://pris.ly/discord',
-    //       published: true,
-    //     },
-    //   ],
-    // },
-  },
-  {
-    name: 'Another User',
-    email: 'mostlyfocusedmike+user1@gmail.com',
-    emailVerified: false,
-  },
-]
-
 async function main() {
   console.log(`Start seeding ...`)
 
   // Clear existing data
+  await prisma.account.deleteMany();
   await prisma.user.deleteMany()
 
-  for (const u of userData) {
-    const user = await prisma.user.create({
-      data: u,
+  await auth.api
+    .signUpEmail({
+      body: {
+        email: process.env.ADMIN_EMAIL as string,
+        password: process.env.ADMIN_PW as string,
+        name: "Admin Primary",
+      },
+      asResponse: false
     })
-    console.log(`Created user with id: ${user.id}`)
-  }
+    .then(console.log);
+
+
+  await auth.api
+    .signUpEmail({
+      body: {
+        email: 'joe@gmail.com',
+        password: 'secret123',
+        name: "Joe Schmoe",
+      },
+      asResponse: false
+    })
+    .then(console.log);
+
+
   console.log(`Seeding finished.`)
 }
 
 main()
-  .then(() => prisma.$disconnect())
+  .then(() => {
+    console.log('Disconnecting...');
+    prisma.$disconnect();
+  })
   .catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()
