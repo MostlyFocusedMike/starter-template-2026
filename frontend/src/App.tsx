@@ -1,11 +1,12 @@
 import MainHeader from "./components/MainHeader";
-import { Navigate, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import Error404Page from "./pages/Error404Page";
 import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import { AuthGate } from "./lib/AuthGate";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -18,10 +19,13 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
 
-            <Route path="/not-found" element={<Error404Page />} />
+
             <Route path="/" element={<HomePage />} />
 
-            <Route path="*" element={<Navigate to="/not-found" />} />
+            {/* admin routes */}
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
+            <Route path="*" element={<Error404Page />} />
           </Routes>
         </AuthGate>
       </main>

@@ -1,5 +1,6 @@
 import { useSession } from "../lib/auth-client";
 import { NavLink } from "react-router";
+import { isAdmin } from "../lib/auth-utils";
 
 export default function MainHeader() {
   const linkClass = "[&.active]:underline"
@@ -9,10 +10,11 @@ export default function MainHeader() {
     <nav>
       <ul className="flex gap-2">
         <li><NavLink to="/" className={linkClass} end>Home</NavLink></li>
-        {data && <li><NavLink to="/profile" className={linkClass} end>Profile</NavLink></li>}
+        {data && <li><NavLink to="/profile" className={linkClass} end>User Profile</NavLink></li>}
 
         {!data && <li><NavLink to="/login" className={linkClass} end>Login</NavLink></li>}
         {!data && <li><NavLink to="/sign-up" className={linkClass} end>Sign Up</NavLink></li>}
+        {isAdmin(data) && <li><NavLink to="/admin-dashboard" className={linkClass} end>Admin</NavLink></li>}
       </ul>
     </nav>
   </header>

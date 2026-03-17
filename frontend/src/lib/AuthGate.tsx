@@ -18,24 +18,24 @@ const publicRoutes = [
  * This is authentication, not authorization
  */
 export function AuthGate({ children }: { children: React.ReactNode }) {
-  const { data: session, isPending } = useSession();
+  const { data: userSession, isPending } = useSession();
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isPending) return;
 
-    if (!session && !publicRoutes.includes(location.pathname)) {
+    if (!userSession && !publicRoutes.includes(location.pathname)) {
       navigate("/login", { state: { from: location }, replace: true });
       return;
     }
 
     // can't signup or login if you already have a session
-    if (session && (['/login', '/sign-up'].includes(location.pathname))) {
+    if (userSession && (['/login', '/sign-up'].includes(location.pathname))) {
       const from = location.state?.from?.pathname || "/profile";
       navigate(from, { replace: true });
     }
-  }, [session, isPending, location, navigate]);
+  }, [userSession, isPending, location, navigate]);
 
   return isPending ? null : children;
 }

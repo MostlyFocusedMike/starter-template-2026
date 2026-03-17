@@ -3,7 +3,7 @@ import { PrismaClient } from './prisma/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import express from 'express';
 import path from 'path';
-import { toNodeHandler } from "better-auth/node";
+import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { auth } from "./auth";
 
 
@@ -18,8 +18,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.get('/api/users', async (req, res) => {
+  const session = (await auth.api.getSession({ headers: fromNodeHeaders(req.headers) }));
+  if (session?.user.role !== 'admin') return res.sendStatus(401);
+
   const users = await prisma.user.findMany();
-  res.json(users);
+  res.json({ result: users });
 });
 
 // remember v5 updated wildcards, they must have names

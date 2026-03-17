@@ -1,3 +1,5 @@
+import type { FlexibleObject } from "./types";
+
 const headers = { 'Content-Type': 'application/json' };
 const credentials = 'include';
 
@@ -9,10 +11,10 @@ export const makeMutateOpts = <T>(data: T, method = 'POST',): RequestInit => ({
   method, headers, credentials, body: JSON.stringify(data),
 });
 
-export default async function fetchHelper<T>(
+export default async function fetchHelper<ResultType>(
   route: string,
   opts = fetchDefaults
-): Promise<T> {
+): Promise<{ result: ResultType, metadata: FlexibleObject }> {
   const host = '/api';
 
   const response = await fetch(host + route, opts);
