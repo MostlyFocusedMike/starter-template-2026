@@ -5,6 +5,7 @@ import express from 'express';
 import path from 'path';
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { auth } from "./auth";
+import { logRoutes } from './middleware/logging';
 
 
 const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
@@ -16,9 +17,11 @@ const app = express();
 app.all('/api/auth/{*any}', toNodeHandler(auth)); // must go before .json()
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(logRoutes);
 
 app.get('/api/users', async (req, res) => {
-  const session = (await auth.api.getSession({ headers: fromNodeHeaders(req.headers) }));
+  const headers = fromNodeHeaders(req.headers);
+  const session = (await auth.api.getSession({ headers }));
   if (session?.user.role !== 'admin') return res.sendStatus(401);
 
   const users = await prisma.user.findMany();
