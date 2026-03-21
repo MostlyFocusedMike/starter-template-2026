@@ -6,6 +6,8 @@ import path from 'path';
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { auth } from "./auth";
 import { logRoutes } from './middleware/logging';
+import { isAdmin } from './middleware/is-admin';
+import { handleSessions } from './middleware/handle-sessions';
 
 
 const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
@@ -13,11 +15,20 @@ const prisma = new PrismaClient({ adapter: pool });
 
 const app = express();
 
-// This /api/auth/* is magic, if you change it, make sure to update the client route
-app.all('/api/auth/{*any}', toNodeHandler(auth)); // must go before .json()
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(logRoutes);
+// This /api/auth/* is magic, if you change it, make sure to update the client route
+app.all('/api/auth/{*any}', logRoutes, toNodeHandler(auth)); // must go before .json()
+app.use(express.json());
+app.use('/api', handleSessions);
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+app.get('/api/health', async (req, res) => {
+  res.json({ result: 'OK' })
+})
+
+app.get('/api/health-auth', isAdmin, async (req, res) => {
+  res.json({ result: 'OK', session: req.session })
+})
 
 app.get('/api/users', async (req, res) => {
   const headers = fromNodeHeaders(req.headers);

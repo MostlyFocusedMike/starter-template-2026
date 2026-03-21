@@ -15,7 +15,6 @@ export const auth = betterAuth({
 
   // Authentication methods allowed
   emailAndPassword: {
-    // Use the email and password method
     enabled: true,
     // We don't want to bother with this for our projects,
     // And by turning this off, our callbackUrls will fire correctly on
@@ -31,3 +30,5 @@ export const auth = betterAuth({
     admin()
   ]
 });
+
+export type Session = typeof auth.$Infer.Session
