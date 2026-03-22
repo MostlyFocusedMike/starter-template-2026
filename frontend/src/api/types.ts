@@ -1,12 +1,16 @@
+// role is always present, but in UserWithRole it's not? pain with validation
 export type User = {
-  id: number;
-  name: string;
+  role: string;
+  banned: boolean | null;
+  banReason?: string | null | undefined;
+  banExpires?: Date | null | undefined;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
   email: string;
   emailVerified: boolean;
-  image?: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
+  name: string;
+  image?: string | null | undefined;
 };
 
 export type FlexibleObject = {

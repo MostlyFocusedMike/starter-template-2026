@@ -19,6 +19,7 @@ const publicRoutes = [
  */
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const { data: userSession, isPending } = useSession();
+  console.log('data:', userSession);
   const location = useLocation();
   const navigate = useNavigate();
 

@@ -24,7 +24,7 @@ export const auth = betterAuth({
   // DB Settings
   // Otherwise it will use uuid for users and I don't want that
   advanced: {
-    database: { generateId: 'serial' },
+    database: { generateId: 'serial', },
   },
   plugins: [
     admin()

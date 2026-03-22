@@ -1,21 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllUsers as queryFn } from "../../api/user";
 import useModal from "../../components/Modal/useModal";
 import Modal from "../../components/Modal";
 import { useState } from "react";
-import type { User } from "../../api/types";
-import { authClient } from "../../lib/auth-client";
+import { authClient, useSession } from "../../lib/auth-client";
 
-const defaultUpdatedUserValues: Partial<User> = {
+const defaultUpdatedUserValues = {
+  id: '',
   name: '',
   email: '',
   role: 'user',
 }
+type UpdatableValues = typeof defaultUpdatedUserValues;
 
 export default function UsersTable() {
-  const { data, isPending, error } = useQuery({ queryKey: ['USERS'], queryFn })
+  const session = useSession();
+  const { data: usersData, isPending, error } = useQuery({
+    queryKey: ['USERS'],
+    queryFn
+  })
+  const queryClient = useQueryClient();
+
   const { dialogRef, openModal, closeModal } = useModal()
-  const [updatedUserData, setUpdatedUserData] = useState<Partial<User>>(defaultUpdatedUserValues);
+  const [updatedUserData, setUpdatedUserData] = useState<typeof defaultUpdatedUserValues>(defaultUpdatedUserValues);
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -23,18 +30,27 @@ export default function UsersTable() {
     if (!originalUserData) return console.error('Could not find original User')
 
     if (updatedUserData.name !== originalUserData.name && updatedUserData.name) {
-      const { data, error } = await authClient.admin.updateUser({
-        userId: updatedUserData.id, // required
-        data: { name: updatedUserData.name.trim() }, // required
+      const { error } = await authClient.admin.updateUser({
+        userId: updatedUserData.id,
+        data: { name: updatedUserData.name.trim() },
       });
-      console.log('data:', data);
-      console.log('error:', error);
+      if (error) console.error(error);
     }
+
+    if (updatedUserData.role !== originalUserData.role) {
+      const { error } = await authClient.admin.setRole({
+        userId: `${updatedUserData.id}`,
+        role: updatedUserData.role as 'user' | 'admin'
+      });
+      if (error) console.error(error);
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['USERS'] });
 
     closeModal();
   }
 
-  const handleEditClick = (user: User) => {
+  const handleEditClick = (user: UpdatableValues) => {
     setUpdatedUserData(user);
     openModal();
   }
@@ -48,7 +64,8 @@ export default function UsersTable() {
   if (isPending) return <p>Loading</p>
   if (error) return <p>Could not load users</p>
 
-  const { result: users } = data;
+  const { result: users } = usersData;
+
   return <>
     <table className="w-60 text-left table-auto min-w-max">
       <thead>
@@ -94,8 +111,9 @@ export default function UsersTable() {
               </td>
               <td className="p-4 border-b border-slate-200">
                 <button
-                  onClick={() => handleEditClick(user)}
-                  className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all"
+                  onClick={() => handleEditClick({ id, email, role, name })}
+                  className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 cursor-not-allowed"
+                  disabled={id === session?.data?.user.id || name === 'Admin'}
                 >Edit User</button>
               </td>
             </tr>
