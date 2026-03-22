@@ -58,6 +58,7 @@ export default function Modal({
         {children}
         <div className="flex items-center justify-end gap-3 mt-4">
           <button
+            type="button"
             onClick={handleClose}
             className="px-3 py-1 rounded-full text-sm font-medium bg-gray-300 text-black hover:bg-gray-400 transition-colors active:scale-95"
           >
