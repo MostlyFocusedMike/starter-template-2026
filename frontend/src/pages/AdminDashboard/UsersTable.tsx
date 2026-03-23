@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllUsers as queryFn } from "../../api/user";
 import useModal from "../../components/Modal/useModal";
-import Modal from "../../components/Modal";
 import { useState } from "react";
 import { authClient, useSession } from "../../lib/auth-client";
+import EditUserModal from "./EditUserModal";
 
 const defaultUpdatedUserValues = {
   id: '',
@@ -11,7 +11,7 @@ const defaultUpdatedUserValues = {
   email: '',
   role: 'user',
 }
-type UpdatableValues = typeof defaultUpdatedUserValues;
+export type UpdatableUserValues = typeof defaultUpdatedUserValues;
 
 export default function UsersTable() {
   const session = useSession();
@@ -21,47 +21,47 @@ export default function UsersTable() {
   })
   const queryClient = useQueryClient();
 
-  const { dialogRef, openModal, closeModal } = useModal()
-  const [updatedUserData, setUpdatedUserData] = useState<typeof defaultUpdatedUserValues>(defaultUpdatedUserValues);
+  const editUserModal = useModal()
+  const [updatedUserData, setUpdatedUserData] = useState<UpdatableUserValues>(defaultUpdatedUserValues);
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    const originalUserData = users.find((user) => user.id === updatedUserData.id)
-    if (!originalUserData) return console.error('Could not find original User')
+    const { id: userId, name, email, role } = updatedUserData;
+    const originalUserData = users.find((user) => user.id === userId)
+    if (!originalUserData) return console.error('Could not find original User');
 
-    if (updatedUserData.name !== originalUserData.name && updatedUserData.name) {
-      const { error } = await authClient.admin.updateUser({
-        userId: updatedUserData.id,
-        data: { name: updatedUserData.name.trim() },
-      });
+    const hasUpdated = (name !== originalUserData.name && name)
+      || (email !== originalUserData.email && email)
+      || (role !== originalUserData.role)
+
+    if ((name !== originalUserData.name && name) || (email !== originalUserData.email && email)) {
+      const opts = { userId, data: { name: name.trim(), email: email.trim() } };
+      const { error } = await authClient.admin.updateUser(opts);
       if (error) console.error(error);
     }
 
-    if (updatedUserData.role !== originalUserData.role) {
-      const { error } = await authClient.admin.setRole({
-        userId: `${updatedUserData.id}`,
-        role: updatedUserData.role as 'user' | 'admin'
-      });
+    if (role !== originalUserData.role) {
+      const opts = { userId, role: role as 'user' | 'admin' };
+      const { error } = await authClient.admin.setRole(opts);
       if (error) console.error(error);
     }
 
-    queryClient.invalidateQueries({ queryKey: ['USERS'] });
+    if (hasUpdated) queryClient.invalidateQueries({ queryKey: ['USERS'] });
 
-    closeModal();
+    editUserModal.closeModal();
   }
 
-  const handleEditClick = (user: UpdatableValues) => {
+  const handleEditClick = (user: UpdatableUserValues) => {
     setUpdatedUserData(user);
-    openModal();
+    editUserModal.openModal();
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.currentTarget;
-
     setUpdatedUserData({ ...updatedUserData, [input.name]: input.value });
   }
 
-  if (isPending) return <p>Loading</p>
+  if (isPending) return <p>Loading...</p>
   if (error) return <p>Could not load users</p>
 
   const { result: users } = usersData;
@@ -105,14 +105,14 @@ export default function UsersTable() {
                 </p>
               </td>
               <td className="p-4 border-b border-slate-200">
-                <p className="block text-sm text-slate-800">
+                <code className="block text-sm text-slate-800">
                   {role}
-                </p>
+                </code>
               </td>
               <td className="p-4 border-b border-slate-200">
                 <button
                   onClick={() => handleEditClick({ id, email, role, name })}
-                  className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 cursor-not-allowed"
+                  className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                   disabled={id === session?.data?.user.id || name === 'Admin'}
                 >Edit User</button>
               </td>
@@ -122,58 +122,12 @@ export default function UsersTable() {
       </tbody>
     </table>
 
-    <Modal
-      header={"Edit User Settings"}
-      dialogRef={dialogRef}
-      handleClose={closeModal}
+    <EditUserModal
+      handleChange={handleChange}
       handleSubmit={handleSubmit}
-    >
-      <div>
-        <label htmlFor="name">Name: </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={updatedUserData?.name}
-          onChange={handleChange}
-          className="border px-1 mx-1 rounded"
-        />
-      </div>
-      <div className="my-2">
-        <label htmlFor="email">Email: </label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          value={updatedUserData?.email}
-          onChange={handleChange}
-          className="border px-1 mx-1 rounded w-65"
-        />
-      </div>
-
-      <fieldset>
-        <legend>Role</legend>
-        <label>User
-          <input
-            type="radio"
-            name="role"
-            value="user"
-            checked={updatedUserData.role === 'user'}
-            onChange={handleChange}
-            className="mx-1"
-          />
-        </label>
-        <label className="mx-2">Admin
-          <input
-            type="radio"
-            name="role"
-            value="admin"
-            checked={updatedUserData.role === 'admin'}
-            onChange={handleChange}
-            className="mx-1"
-          />
-        </label>
-      </fieldset>
-    </Modal>
+      dialogRef={editUserModal.dialogRef}
+      closeModal={editUserModal.closeModal}
+      updatedUserData={updatedUserData}
+    />
   </>
 }

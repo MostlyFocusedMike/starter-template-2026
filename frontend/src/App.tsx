@@ -2,7 +2,7 @@ import MainHeader from "./components/MainHeader";
 import { Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import Error404Page from "./pages/Error404Page";
-import SignUpPage from "./pages/SignUpPage";
+// import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import { AuthGate } from "./lib/AuthGate";
@@ -15,7 +15,7 @@ function App() {
       <main>
         <AuthGate>
           <Routes>
-            <Route path="/sign-up" element={<SignUpPage />} />
+            {/* <Route path="/sign-up" element={<SignUpPage />} /> */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
 

@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { signIn, useSession } from "../../lib/auth-client";
 import { useGoToPreviouslyFromLocation } from "../../lib/hooks";
 
@@ -31,8 +30,6 @@ export default function LoginPage() {
       </label>
 
       <button className="border rounded-xl px-3 hover:bg-gray-200 active:bg-gray-400">Submit</button>
-
-      <Link to='/sign-up' className="underline block">Sign Up Instead</Link>
     </form>
   </div>;
 }
