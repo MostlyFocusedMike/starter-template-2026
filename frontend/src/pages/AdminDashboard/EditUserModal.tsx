@@ -1,4 +1,4 @@
-import Modal from "../../components/Modal";
+import Modal from "../../lib/components/Modal";
 import type { UpdatableUserValues } from "./UsersTable";
 
 type Props = {

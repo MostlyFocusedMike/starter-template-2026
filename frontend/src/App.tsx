@@ -1,11 +1,11 @@
-import MainHeader from "./components/MainHeader";
+import MainHeader from "./lib/components/MainHeader";
 import { Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import Error404Page from "./pages/Error404Page";
 // import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
-import { AuthGate } from "./lib/AuthGate";
+import { AuthGate } from "./lib/components/AuthGate";
 import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {

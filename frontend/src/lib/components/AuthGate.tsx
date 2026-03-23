@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useSession } from "./auth-client";
+import { useSession } from "../auth-client";
 
 // By default, all routes are protected
 const publicRoutes = [

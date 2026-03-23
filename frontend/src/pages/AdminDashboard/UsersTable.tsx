@@ -1,15 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { updateUserAsAdmin } from "../../api/auth-api";
-import useModal from "../../components/Modal/useModal";
+import useModal from "../../lib/components/Modal/useModal";
 import { useState } from "react";
 import { useSession } from "../../lib/auth-client";
 import EditUserModal from "./EditUserModal";
-import BasicHeader from "../../components/table-elements/BasicHeader";
-import BasicTextCell from "../../components/table-elements/BasicTextCell";
-import BasicCell from "../../components/table-elements/BasicCell";
-import BasicRow from "../../components/table-elements/BasicRow";
+import BasicHeader from "../../lib/components/table-elements/BasicHeader";
+import BasicTextCell from "../../lib/components/table-elements/BasicTextCell";
+import BasicCell from "../../lib/components/table-elements/BasicCell";
+import BasicRow from "../../lib/components/table-elements/BasicRow";
 import { useGetAllUsers } from "../../api/auth-hooks";
-import LoadingOrErrorCard from "../../components/LoadingOrErrorCard";
+import LoadingOrErrorCard from "../../lib/components/LoadingOrErrorCard";
 
 const defaultUpdatedUserValues = { id: '', name: '', email: '', role: 'user' };
 export type UpdatableUserValues = typeof defaultUpdatedUserValues;

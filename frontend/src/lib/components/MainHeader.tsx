@@ -1,6 +1,6 @@
-import { useSession } from "../lib/auth-client";
+import { useSession } from "../auth-client";
 import { NavLink } from "react-router";
-import { isAdmin } from "../lib/auth-utils";
+import { isAdmin } from "../auth-utils";
 
 export default function MainHeader() {
   const linkClass = "[&.active]:underline";
