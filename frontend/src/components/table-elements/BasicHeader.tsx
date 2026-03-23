@@ -7,9 +7,9 @@ export default function BasicHeader({ columns }: { columns: string[] }) {
             <p className="block text-sm font-normal leading-none text-slate-500">
               {columnName}
             </p>
-          </th>
+          </th>;
         })
       }
     </tr>
-  </thead>
+  </thead>;
 }

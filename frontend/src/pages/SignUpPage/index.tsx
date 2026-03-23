@@ -7,19 +7,19 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    const { email, password, name } = Object.fromEntries(new FormData(e.target)) as { [key: string]: string }
+    const { email, password, name } = Object.fromEntries(new FormData(e.target)) as { [key: string]: string };
 
     try {
       const { error } = await signUp.email({ email, password, name });
 
-      if (error) return console.error(error)
+      if (error) return console.error(error);
 
       await refetch();
       goBackToWhereUserCameFrom();
     } catch (error) {
-      console.log('it really fucked:', error);
+      console.log('Something went wrong', error);
     }
-  }
+  };
 
   return <div className="m-2">
     <h1 className="text-3xl mb-4">Sign up!</h1>

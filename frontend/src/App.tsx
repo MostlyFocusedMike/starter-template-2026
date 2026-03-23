@@ -30,7 +30,7 @@ function App() {
         </AuthGate>
       </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

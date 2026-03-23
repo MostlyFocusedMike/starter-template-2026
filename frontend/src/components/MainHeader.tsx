@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import { isAdmin } from "../lib/auth-utils";
 
 export default function MainHeader() {
-  const linkClass = "[&.active]:underline"
+  const linkClass = "[&.active]:underline";
   const { data } = useSession();
 
   return <header className="w-full bg-slate-950 text-slate-50 p-2 flex justify-end border-b-2 border-slate-400">
@@ -17,5 +17,5 @@ export default function MainHeader() {
         {isAdmin(data) && <li><NavLink to="/admin-dashboard" className={linkClass} end>Admin</NavLink></li>}
       </ul>
     </nav>
-  </header>
+  </header>;
 }

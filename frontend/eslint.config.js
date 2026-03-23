@@ -20,6 +20,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      "semi": ['error'],
       "no-unused-vars": ["error", {
         "vars": "all",
         "args": "after-used",

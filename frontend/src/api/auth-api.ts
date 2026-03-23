@@ -1,7 +1,7 @@
 import { authClient } from "../lib/auth-client";
 import fetchHelper, { makeMutateOpts } from "./fetch-util";
 import type { User } from "./types";
-import type { UpdatableUserValues } from "../pages/AdminDashboard/UsersTable"
+import type { UpdatableUserValues } from "../pages/AdminDashboard/UsersTable";
 import type { QueryClient } from "@tanstack/react-query";
 
 export const getAllUsers = async () => {
@@ -14,18 +14,17 @@ export const getAllUsers = async () => {
   });
 
   if (error) {
-    console.error('Load all users error', error)
-    throw new Error(error.message)
+    console.error('Load all users error', error);
+    throw new Error(error.message);
   }
 
-  console.log('users:', users.users);
   return { result: (users.users as unknown as User[]), metadata: { total: users.total } };
 };
 
 // outdated
 export const createITEM = async (newData: unknown) => {
   return await fetchHelper<unknown>('/users', makeMutateOpts(newData));
-}
+};
 
 export const updateUserAsAdmin = async (queryClient: QueryClient, originalUserData: User, updatedUserData: UpdatableUserValues) => {
   const { id: userId, name, email, role } = updatedUserData;
@@ -33,7 +32,7 @@ export const updateUserAsAdmin = async (queryClient: QueryClient, originalUserDa
 
   const hasUpdated = (name !== originalUserData.name && name)
     || (email !== originalUserData.email && email)
-    || (role !== originalUserData.role)
+    || (role !== originalUserData.role);
 
   if ((name !== originalUserData.name && name) || (email !== originalUserData.email && email)) {
     const opts = { userId, data: { name: name.trim(), email: email.trim() } };
@@ -48,4 +47,4 @@ export const updateUserAsAdmin = async (queryClient: QueryClient, originalUserDa
   }
 
   if (hasUpdated) queryClient.invalidateQueries({ queryKey: ['USERS'] });
-}
+};

@@ -1,12 +1,12 @@
-import { useEffect } from "react"
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useSession } from "./auth-client"
+import { useSession } from "./auth-client";
 
 // By default, all routes are protected
 const publicRoutes = [
   '/login',
   '/sign-up'
-]
+];
 
 /**
  * This gate allows us to gracefully handle users trying to access protected routes,
@@ -19,7 +19,6 @@ const publicRoutes = [
  */
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const { data: userSession, isPending } = useSession();
-  console.log('data:', userSession);
   const location = useLocation();
   const navigate = useNavigate();
 

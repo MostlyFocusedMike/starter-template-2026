@@ -6,5 +6,5 @@ export default function BasicTextCell({ children, isCode }: { children?: ReactNo
     <p className="block text-sm text-slate-800">
       {isCode ? <code>{children}</code> : children}
     </p>
-  </BasicCell>
+  </BasicCell>;
 }

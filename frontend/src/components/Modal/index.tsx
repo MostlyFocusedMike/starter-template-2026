@@ -32,7 +32,7 @@ export default function Modal({
       mouseY <= top || mouseY >= bottom
     );
     if (clickedOutsideOfModalBox) closeModal();
-  }
+  };
 
   return <>
     <dialog
@@ -72,5 +72,5 @@ export default function Modal({
         </div>
       </form>
     </dialog >
-  </>
+  </>;
 }

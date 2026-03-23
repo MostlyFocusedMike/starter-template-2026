@@ -9,8 +9,9 @@ import BasicTextCell from "../../components/table-elements/BasicTextCell";
 import BasicCell from "../../components/table-elements/BasicCell";
 import BasicRow from "../../components/table-elements/BasicRow";
 import { useGetAllUsers } from "../../api/auth-hooks";
+import LoadingOrErrorCard from "../../components/LoadingOrErrorCard";
 
-const defaultUpdatedUserValues = { id: '', name: '', email: '', role: 'user' }
+const defaultUpdatedUserValues = { id: '', name: '', email: '', role: 'user' };
 export type UpdatableUserValues = typeof defaultUpdatedUserValues;
 
 export default function UsersTable() {
@@ -18,31 +19,30 @@ export default function UsersTable() {
   const { data: usersData, isPending, error } = useGetAllUsers();
   const queryClient = useQueryClient();
 
-  const editUserModalDetails = useModal()
+  const editUserModalDetails = useModal();
   const [updatedUserData, setUpdatedUserData] = useState<UpdatableUserValues>(defaultUpdatedUserValues);
 
   const handleEditUserSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    const originalUserData = users.find((user) => user.id === updatedUserData.id)
+    const originalUserData = users.find((user) => user.id === updatedUserData.id);
     if (!originalUserData) return console.error('Could not find original User');
 
     updateUserAsAdmin(queryClient, originalUserData, updatedUserData);
 
     editUserModalDetails.closeModal();
-  }
+  };
 
   const handleEditClick = (user: UpdatableUserValues) => {
     setUpdatedUserData(user);
     editUserModalDetails.openModal();
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.currentTarget;
     setUpdatedUserData({ ...updatedUserData, [input.name]: input.value });
-  }
+  };
 
-  if (isPending) return <p>Loading...</p>
-  if (error) return <p>Could not load users</p>
+  if (isPending || error) return <LoadingOrErrorCard isPending error={error} />;
 
   const { result: users } = usersData;
 
@@ -69,7 +69,7 @@ export default function UsersTable() {
                   disabled={id === session?.data?.user.id || name === 'Admin'}
                 >Reset Password</button>
               </BasicCell>
-            </BasicRow>
+            </BasicRow>;
           })
         }
       </tbody>
@@ -81,5 +81,5 @@ export default function UsersTable() {
       handleSubmit={handleEditUserSubmit}
       handleChange={handleChange}
     />
-  </>
+  </>;
 }

@@ -1,8 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from "react-router";
-import App from './App.tsx'
-import './index.css'
+import App from './App.tsx';
+import './index.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -15,4 +15,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>,
-)
+);

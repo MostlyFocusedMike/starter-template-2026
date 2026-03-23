@@ -1,12 +1,12 @@
-import { useQuery } from "@tanstack/react-query"
-import { getAllUsers } from "./auth-api"
+import { useQuery } from "@tanstack/react-query";
+import { getAllUsers } from "./auth-api";
 
 
-const USERS = 'USERS'
+const USERS = 'USERS';
 
-export const AUTH_QUERY_KEYS = { USERS }
+export const AUTH_QUERY_KEYS = { USERS };
 
 export const useGetAllUsers = () => {
-  return useQuery({ queryKey: [USERS], queryFn: getAllUsers })
+  return useQuery({ queryKey: [USERS], queryFn: getAllUsers });
 
-}
+};

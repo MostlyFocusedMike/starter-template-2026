@@ -1,4 +1,4 @@
-import Modal from "../../components/Modal"
+import Modal from "../../components/Modal";
 import type { UpdatableUserValues } from "./UsersTable";
 
 type Props = {
@@ -64,5 +64,5 @@ export default function EditUserModal({ updatedUserData, modalDetails, handleCha
         />
       </label>
     </fieldset>
-  </Modal>
+  </Modal>;
 }

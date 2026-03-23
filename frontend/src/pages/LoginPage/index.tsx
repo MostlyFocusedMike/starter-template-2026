@@ -7,7 +7,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    const { email, password } = Object.fromEntries(new FormData(e.target)) as { [key: string]: string }
+    const { email, password } = Object.fromEntries(new FormData(e.target)) as { [key: string]: string };
     const { error } = await signIn.email({ email, password, });
 
     if (error) return console.error(error);
