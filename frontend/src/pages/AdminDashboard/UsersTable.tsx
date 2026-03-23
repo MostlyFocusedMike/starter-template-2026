@@ -4,6 +4,10 @@ import useModal from "../../components/Modal/useModal";
 import { useState } from "react";
 import { authClient, useSession } from "../../lib/auth-client";
 import EditUserModal from "./EditUserModal";
+import BasicHeader from "../../components/table-elements/BasicHeader";
+import BasicTextCell from "../../components/table-elements/BasicTextCell";
+import BasicCell from "../../components/table-elements/BasicCell";
+import BasicRow from "../../components/table-elements/BasicRow";
 
 const defaultUpdatedUserValues = {
   id: '',
@@ -68,55 +72,28 @@ export default function UsersTable() {
 
   return <>
     <table className="w-60 text-left table-auto min-w-max">
-      <thead>
-        <tr>
-          <th className="p-4 border-b border-slate-300 bg-slate-50">
-            <p className="block text-sm font-normal leading-none text-slate-500">
-              Email
-            </p>
-          </th>
-          <th className="p-4 border-b border-slate-300 bg-slate-50">
-            <p className="block text-sm font-normal leading-none text-slate-500">
-              Name
-            </p>
-          </th>
-          <th className="p-4 border-b border-slate-300 bg-slate-50">
-            <p className="block text-sm font-normal leading-none text-slate-500">
-              Role
-            </p>
-          </th>
-          <th className="p-4 border-b border-slate-300 bg-slate-50"></th>
-        </tr>
-      </thead>
+      <BasicHeader columns={['Email', 'Name', 'Role', '', '']} />
       <tbody>
         {
-          users.map((user) => {
-            const { id, email, role, name } = user;
-
-            return <tr key={id} className="hover:bg-slate-50">
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-sm text-slate-800">
-                  {email}
-                </p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <p className="block text-sm text-slate-800">
-                  {name}
-                </p>
-              </td>
-              <td className="p-4 border-b border-slate-200">
-                <code className="block text-sm text-slate-800">
-                  {role}
-                </code>
-              </td>
-              <td className="p-4 border-b border-slate-200">
+          users.map(({ id, email, role, name }) => {
+            return <BasicRow key={id}>
+              <BasicTextCell>{email}</BasicTextCell>
+              <BasicTextCell>{name}</BasicTextCell>
+              <BasicTextCell isCode>{role}</BasicTextCell>
+              <BasicCell>
                 <button
                   onClick={() => handleEditClick({ id, email, role, name })}
                   className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
                   disabled={id === session?.data?.user.id || name === 'Admin'}
                 >Edit User</button>
-              </td>
-            </tr>
+              </BasicCell>
+              <BasicCell>
+                <button
+                  className="px-4 py-1 rounded-full text-sm font-medium bg-red-800 hover:bg-red-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  disabled={id === session?.data?.user.id || name === 'Admin'}
+                >Reset Password</button>
+              </BasicCell>
+            </BasicRow>
           })
         }
       </tbody>
