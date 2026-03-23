@@ -2,17 +2,20 @@ import Modal from "../../components/Modal"
 import type { UpdatableUserValues } from "./UsersTable";
 
 type Props = {
-  dialogRef: React.RefObject<HTMLDialogElement | null>;
-  closeModal: () => void | undefined;
+  modalDetails: {
+    dialogRef: React.RefObject<HTMLDialogElement | null>;
+    closeModal: () => void | undefined;
+    openModal: () => void | undefined;
+  };
   handleSubmit: (_e: React.SubmitEvent<Element>) => Promise<void>;
   handleChange: (_e: React.ChangeEvent<HTMLInputElement, Element>) => void;
   updatedUserData: UpdatableUserValues
 }
-export default function EditUserModal({ updatedUserData, dialogRef, closeModal, handleChange, handleSubmit }: Props) {
+export default function EditUserModal({ updatedUserData, modalDetails, handleChange, handleSubmit }: Props) {
   return <Modal
     header={"Edit User Settings"}
-    dialogRef={dialogRef}
-    handleClose={closeModal}
+    dialogRef={modalDetails.dialogRef}
+    handleClose={modalDetails.closeModal}
     handleSubmit={handleSubmit}
   >
     <div>

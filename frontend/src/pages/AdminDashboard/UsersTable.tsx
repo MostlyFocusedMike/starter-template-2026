@@ -1,63 +1,39 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllUsers as queryFn } from "../../api/user";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateUserAsAdmin } from "../../api/auth-api";
 import useModal from "../../components/Modal/useModal";
 import { useState } from "react";
-import { authClient, useSession } from "../../lib/auth-client";
+import { useSession } from "../../lib/auth-client";
 import EditUserModal from "./EditUserModal";
 import BasicHeader from "../../components/table-elements/BasicHeader";
 import BasicTextCell from "../../components/table-elements/BasicTextCell";
 import BasicCell from "../../components/table-elements/BasicCell";
 import BasicRow from "../../components/table-elements/BasicRow";
+import { useGetAllUsers } from "../../api/auth-hooks";
 
-const defaultUpdatedUserValues = {
-  id: '',
-  name: '',
-  email: '',
-  role: 'user',
-}
+const defaultUpdatedUserValues = { id: '', name: '', email: '', role: 'user' }
 export type UpdatableUserValues = typeof defaultUpdatedUserValues;
 
 export default function UsersTable() {
   const session = useSession();
-  const { data: usersData, isPending, error } = useQuery({
-    queryKey: ['USERS'],
-    queryFn
-  })
+  const { data: usersData, isPending, error } = useGetAllUsers();
   const queryClient = useQueryClient();
 
-  const editUserModal = useModal()
+  const editUserModalDetails = useModal()
   const [updatedUserData, setUpdatedUserData] = useState<UpdatableUserValues>(defaultUpdatedUserValues);
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleEditUserSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
-    const { id: userId, name, email, role } = updatedUserData;
-    const originalUserData = users.find((user) => user.id === userId)
+    const originalUserData = users.find((user) => user.id === updatedUserData.id)
     if (!originalUserData) return console.error('Could not find original User');
 
-    const hasUpdated = (name !== originalUserData.name && name)
-      || (email !== originalUserData.email && email)
-      || (role !== originalUserData.role)
+    updateUserAsAdmin(queryClient, originalUserData, updatedUserData);
 
-    if ((name !== originalUserData.name && name) || (email !== originalUserData.email && email)) {
-      const opts = { userId, data: { name: name.trim(), email: email.trim() } };
-      const { error } = await authClient.admin.updateUser(opts);
-      if (error) console.error(error);
-    }
-
-    if (role !== originalUserData.role) {
-      const opts = { userId, role: role as 'user' | 'admin' };
-      const { error } = await authClient.admin.setRole(opts);
-      if (error) console.error(error);
-    }
-
-    if (hasUpdated) queryClient.invalidateQueries({ queryKey: ['USERS'] });
-
-    editUserModal.closeModal();
+    editUserModalDetails.closeModal();
   }
 
   const handleEditClick = (user: UpdatableUserValues) => {
     setUpdatedUserData(user);
-    editUserModal.openModal();
+    editUserModalDetails.openModal();
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,11 +76,10 @@ export default function UsersTable() {
     </table>
 
     <EditUserModal
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
-      dialogRef={editUserModal.dialogRef}
-      closeModal={editUserModal.closeModal}
+      modalDetails={editUserModalDetails}
       updatedUserData={updatedUserData}
+      handleSubmit={handleEditUserSubmit}
+      handleChange={handleChange}
     />
   </>
 }
