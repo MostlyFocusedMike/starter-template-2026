@@ -1,45 +1,29 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { updateUserAsAdmin } from "../../api/auth-api";
-import useModal from "../../lib/components/Modal/useModal";
+import useModal, { type ModalDetails } from "../../lib/components/Modal/useModal";
 import { useState } from "react";
 import { useSession } from "../../lib/auth-client";
-import EditUserModal from "./EditUserModal";
+import EditUserModal from "./ModalEditUser";
 import BasicHeader from "../../lib/components/table-elements/BasicHeader";
 import BasicTextCell from "../../lib/components/table-elements/BasicTextCell";
 import BasicCell from "../../lib/components/table-elements/BasicCell";
 import BasicRow from "../../lib/components/table-elements/BasicRow";
 import { useGetAllUsers } from "../../api/auth-hooks";
 import LoadingOrErrorCard from "../../lib/components/LoadingOrErrorCard";
+import ResetPasswordModal from "./ModalResetPassword";
 
 const defaultUpdatedUserValues = { id: '', name: '', email: '', role: 'user' };
 export type UpdatableUserValues = typeof defaultUpdatedUserValues;
 
 export default function UsersTable() {
   const session = useSession();
+  const [updatedUserData, setUpdatedUserData] = useState<UpdatableUserValues>(defaultUpdatedUserValues);
   const { data: usersData, isPending, error } = useGetAllUsers();
-  const queryClient = useQueryClient();
 
   const editUserModalDetails = useModal();
-  const [updatedUserData, setUpdatedUserData] = useState<UpdatableUserValues>(defaultUpdatedUserValues);
+  const resetPasswordModalDetails = useModal();
 
-  const handleEditUserSubmit = async (e: React.SubmitEvent) => {
-    e.preventDefault();
-    const originalUserData = users.find((user) => user.id === updatedUserData.id);
-    if (!originalUserData) return console.error('Could not find original User');
-
-    updateUserAsAdmin(queryClient, originalUserData, updatedUserData);
-
-    editUserModalDetails.closeModal();
-  };
-
-  const handleEditClick = (user: UpdatableUserValues) => {
+  const handleModalOpen = (user: UpdatableUserValues, modalDetails: ModalDetails) => {
     setUpdatedUserData(user);
-    editUserModalDetails.openModal();
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.currentTarget;
-    setUpdatedUserData({ ...updatedUserData, [input.name]: input.value });
+    modalDetails.openModal();
   };
 
   if (isPending || error) return <LoadingOrErrorCard isPending error={error} />;
@@ -58,14 +42,15 @@ export default function UsersTable() {
               <BasicTextCell isCode>{role}</BasicTextCell>
               <BasicCell>
                 <button
-                  onClick={() => handleEditClick({ id, email, role, name })}
-                  className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  onClick={() => handleModalOpen({ id, email, role, name }, editUserModalDetails)}
+                  className="px-4 py-1 rounded-full text-sm font-medium bg-gray-800 hover:bg-gray-700 active:scale-95 text-white transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                   disabled={id === session?.data?.user.id || name === 'Admin'}
                 >Edit User</button>
               </BasicCell>
               <BasicCell>
                 <button
-                  className="px-4 py-1 rounded-full text-sm font-medium bg-red-800 hover:bg-red-700 active:scale-95 text-white transition-all disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  onClick={() => handleModalOpen({ id, email, role, name }, resetPasswordModalDetails)}
+                  className="px-4 py-1 rounded-full text-sm font-medium bg-red-800 hover:bg-red-700 active:scale-95 text-white transition-all disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                   disabled={id === session?.data?.user.id || name === 'Admin'}
                 >Reset Password</button>
               </BasicCell>
@@ -78,8 +63,12 @@ export default function UsersTable() {
     <EditUserModal
       modalDetails={editUserModalDetails}
       updatedUserData={updatedUserData}
-      handleSubmit={handleEditUserSubmit}
-      handleChange={handleChange}
+      users={users}
+      setUpdatedUserData={setUpdatedUserData}
+    />
+    <ResetPasswordModal
+      modalDetails={resetPasswordModalDetails}
+      updatedUserData={updatedUserData}
     />
   </>;
 }

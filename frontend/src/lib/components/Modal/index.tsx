@@ -3,10 +3,11 @@ import { type ReactNode } from "react";
 type Props = {
   dialogRef: React.RefObject<HTMLDialogElement | null>;
   header: string;
-  handleClose: () => void | undefined;
+  handleClose?: () => void | undefined;
   handleSubmit: (_e: React.SubmitEvent) => void;
   hasX?: boolean;
   submitButtonText?: string;
+  headerBg?: string;
   children: ReactNode;
 }
 export default function Modal({
@@ -16,6 +17,7 @@ export default function Modal({
   handleSubmit,
   hasX = true,
   submitButtonText = 'Submit',
+  headerBg = 'bg-gray-800',
   children,
 }: Props) {
   const closeModal = () => dialogRef?.current?.close();
@@ -41,7 +43,7 @@ export default function Modal({
       onClose={handleClose}
       className="fixed inset-0 m-auto rounded-sm backdrop:backdrop-blur-[1px]"
     >
-      <div className={`bg-gray-800 flex gap-20 justify-between items-center px-1`}>
+      <div className={`${headerBg} flex gap-20 justify-between items-center px-1`}>
         <h2 className="text-white text-3xl m-2">{header}</h2>
         {hasX &&
           <form method="dialog" className="block">
@@ -59,7 +61,7 @@ export default function Modal({
         <div className="flex items-center justify-end gap-3 mt-4">
           <button
             type="button"
-            onClick={handleClose}
+            onClick={closeModal}
             className="px-3 py-1 rounded-full text-sm font-medium bg-gray-300 text-black hover:bg-gray-400 transition-colors active:scale-95"
           >
             Cancel

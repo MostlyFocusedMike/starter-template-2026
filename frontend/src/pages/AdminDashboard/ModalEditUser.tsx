@@ -1,21 +1,37 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { updateUserAsAdmin } from "../../api/auth-api";
 import Modal from "../../lib/components/Modal";
+import type { ModalDetails } from "../../lib/components/Modal/useModal";
 import type { UpdatableUserValues } from "./UsersTable";
+import type { User } from "../../api/types";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
-  modalDetails: {
-    dialogRef: React.RefObject<HTMLDialogElement | null>;
-    closeModal: () => void | undefined;
-    openModal: () => void | undefined;
-  };
-  handleSubmit: (_e: React.SubmitEvent<Element>) => Promise<void>;
-  handleChange: (_e: React.ChangeEvent<HTMLInputElement, Element>) => void;
+  modalDetails: ModalDetails;
+  setUpdatedUserData: Dispatch<SetStateAction<UpdatableUserValues>>;
   updatedUserData: UpdatableUserValues
+  users: User[];
 }
-export default function EditUserModal({ updatedUserData, modalDetails, handleChange, handleSubmit }: Props) {
+export default function EditUserModal({ updatedUserData, modalDetails, setUpdatedUserData, users }: Props) {
+  const queryClient = useQueryClient();
+
+  const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+    const originalUserData = users.find((user) => user.id === updatedUserData.id);
+    if (!originalUserData) return console.error('Could not find original User');
+
+    updateUserAsAdmin(queryClient, originalUserData, updatedUserData);
+    modalDetails.closeModal();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    setUpdatedUserData({ ...updatedUserData, [input.name]: input.value });
+  };
+
   return <Modal
-    header={"Edit User Settings"}
+    header="Edit User Settings"
     dialogRef={modalDetails.dialogRef}
-    handleClose={modalDetails.closeModal}
     handleSubmit={handleSubmit}
   >
     <div>
