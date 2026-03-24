@@ -62,8 +62,8 @@ export default function UsersTable() {
 
     <EditUserModal
       modalDetails={editUserModalDetails}
-      updatedUserData={updatedUserData}
       users={users}
+      updatedUserData={updatedUserData}
       setUpdatedUserData={setUpdatedUserData}
     />
     <ResetPasswordModal

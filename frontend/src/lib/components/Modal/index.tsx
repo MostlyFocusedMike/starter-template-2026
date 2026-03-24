@@ -23,7 +23,7 @@ export default function Modal({
   const closeModal = () => dialogRef?.current?.close();
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    if (!e.currentTarget.matches('dialog')) return;
+    if (!e.currentTarget.matches('dialog')) return; // TODO: Why did you add this?
     const { top, bottom, left, right } = e.currentTarget.getBoundingClientRect();
     const { clientX: mouseX, clientY: mouseY } = e;
 

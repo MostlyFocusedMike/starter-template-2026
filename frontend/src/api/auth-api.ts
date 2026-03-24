@@ -48,3 +48,7 @@ export const updateUserAsAdmin = async (queryClient: QueryClient, originalUserDa
 
   if (hasUpdated) queryClient.invalidateQueries({ queryKey: ['USERS'] });
 };
+
+export const updateUserPasswordAsAdmin = async (userId: string, newPassword: string) => {
+  return await authClient.admin.setUserPassword({ userId, newPassword });
+};
